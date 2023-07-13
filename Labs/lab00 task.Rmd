@@ -1,0 +1,161 @@
+---
+title: 'Lab 0: Lab template'
+subtitle: "STATS 369"
+author: "This task does NOT need to be submitted"
+output:
+  html_document:
+    highlight: pygments
+    theme: readable
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+Before we get started, make sure this file an d `STATS369_lab-template.Rmd` are downloaded in the same place in your computer.
+
+# What is this document?
+
+This lab takes you through some basics of RMarkdown that you have probably seen in other courses. It also covers a couple important considerations for our labs and assignments in this course, as well as discussing how/when you can use ChatGPT. Finally, its main purpose is to give you a useful template for your own labs and assessments.
+
+
+# Some information from Liza
+
+## The 'look' of your template 
+This is a Rmd document. You can change the look of the document by editting the YAML area above. The YAML (yet another markdown laonguage).
+
+You can try other themes if you would like, [this post](https://www.datadreaming.org/post/r-markdown-theme-gallery/) gives some nice images to show you what they look like. This is optional
+
+
+## Use of generative AI tools in courses and exams
+
+It is your responsibility to know what is allowed with respect to artificial intelligence in each of your courses. 
+
+In STATS 369, **unless you are told otherwise for a specific task**, we are following Option 3 from the [UoA TeachWell website](https://teachwell.auckland.ac.nz/resources/academic-integrity/declaration/).
+
+### The use of generative AI tools in coursework is permitted only with acknowledgement
+Students are allowed to use using generative artificial intelligence text and art generation software, such as ChatGPT and DALL.E 2, in this class. However, you must reference any use of such tools.
+
+Referencing: For guidance on how to reference AI generated content in your writing, visit [Quick©ite](https://www.cite.auckland.ac.nz/2.html).
+
+Please be aware of the limitations of ChatGPT, including the following:
+
+* In order to achieve high-quality results, you must provide suitable prompts. Keep refining your prompts until you get quality outputs.
+* Do not rely on any information given by the tool. Unless you can confirm the answer with another source, assume that any facts or figures provided by the tool are incorrect. It is your responsibility to ensure that the tool does not make any errors or omissions, and it works best for topics that you are familiar with.
+
+### How I would recommend using AI in this course.
+
+I think generative AIs will be a big part of efficient workflows for data scienctists (and are already for many). That's why I do not want to totally cut you off from them. THAT SAID, I find using AI the most helpful in my own work when I already know the enough to evaluate the output with a reasonable level of expertise. Labs are low stakes assessments based on effort. I would strongly recommend that you use these as challenges to write your own code. In the test and exam, you will NOT have the AI and will need to be able to read and evaluate code. Practise with writing code will make this much easier for you.
+
+::: {style="color: red;"}
+If you do not have access to an AI based on ethical and/or financial considerations, you DO NOT NEED TO USE ONE to achieve highly in this course.
+:::
+
+<hr>
+
+**I asked ChatGPT to write part of this lab for you.**
+
+### My prompt: 
+
+Write code for an Rmd document for a introduction lab to a course that uses R Markdown. The document should briefly explain what an Rmd is, covering code and text areas. It should also demo how to load libraries (specifically tidyverse), how to load in data, how to load an image (use this image: https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/4898fb61-98e9-4923-8725-6813d4de2d82_rw_3840.png?h=4709fe2b5d30edf6550e1768f04ef1d8 and credit Alison Horst, https://allisonhorst.com/data-science-art), explain headings and explain comments on code (noting that both use hashtags and explaining the difference)
+
+### With a few edits, this is what ChatGPT suggested...
+
+# ChatGPT's Introductory Lab
+
+## Introduction 
+
+R Markdown is a file format for making dynamic documents with R. It provides an authoring framework for data science and allows you to save and execute code to produce reports that are easy to maintain, reproducible and can be version controlled.
+
+An R Markdown document is written in markdown (an easy-to-write plain text format) and contains chunks of embedded R code. The markdown syntax allows you to write text naturally and format text using intuitive shortcuts.
+
+R Markdown documents consist of text areas, code areas, and metadata.
+
+The document is divided into chunks with each chunk being either text or code.
+
+## Code chunks
+
+Chunks of R code in the document are run and the output (including graphics) is inserted into the final document.
+
+Here is an example of a code chunk:
+
+```{r}
+# This is a comment within a code chunk
+print("Hello, world!")
+```
+
+The `{r}` after the three backticks ` ``` ` indicates that the chunk is written in R language. 
+
+Comments within code chunks are preceded by a hash `#`, like in the example above.
+
+## Text chunks
+
+Text chunks contain the narrative of the document and use markdown formatting.
+
+For example, this line of text is bold: **This is bold text**
+
+Markdown uses simple symbols to format text. The text between the double asterisks `**` is bold.
+
+## Loading Libraries
+
+In R, libraries can be loaded using the `library` function. Let's load the `tidyverse` package, which is a collection of R packages designed for data science. If you don't have it installed, you can install it using `install.packages("tidyverse")`.
+
+```{r, message = FALSE}
+# Load the tidyverse library
+library(tidyverse)
+```
+
+## Loading Data
+
+Data can be loaded in R using various functions depending on the data type. Here we will load a CSV file.
+
+Replace 'YOUR_DATA.csv' with your actual data file.
+
+```{r, eval = FALSE}
+# Load data
+data <- read_csv('YOUR_DATA.csv')
+
+# Note: I've made some changes from ChatGPT's suggestion
+## 1. I converted read.csv to read_csv.
+##   Usually they do basically the same thing, but I like the 
+##   way the tidyverse version handles things
+## 2. I added eval=FALSE to the chunk options so it wouldn't be run
+```
+
+## Loading Images
+
+You can also embed images in your R Markdown documents. For example, this image is created by Alison Horst. You can visit her website at https://allisonhorst.com/data-science-art
+
+```{r, echo=FALSE, fig.cap="Source: Horst (2019)"}
+knitr::include_graphics("https://cdn.myportfolio.com/45214904-6a61-4e23-98d6-b140f8654a40/4898fb61-98e9-4923-8725-6813d4de2d82_rw_3840.png?h=4709fe2b5d30edf6550e1768f04ef1d8")
+
+# Note: Check out the caption I can add with
+# fig.cap in the chunk options
+```
+
+<br>
+
+*Note from Liza: This is an example of including an image from the web, but you can (and more often will) include an image from your own files. You can use the same code, but add the path to the image in the same way you would add the path to a dataset.*
+
+## Headings
+
+In markdown, headings are created using hash `#` symbols. 
+
+* `#` creates a first level heading
+* `##` creates a second level heading
+* `###` creates a third level heading, and so on.
+
+Remember that in code chunks, `#` is used for comments, but in text chunks, `#` is used for headings. 
+
+That's all for this introductory lab. Happy coding! (Cute little note from our AI overlords! - Liza )
+
+<hr>
+
+# Lab/assessment template
+
+```{r template, child=here("Labs/STATS369_lab-template.Rmd")}
+# I am reading a seperate file into this one! 
+# This is not something you'll have to do in this course, 
+# but is cool to know you can do.
+```
+
+

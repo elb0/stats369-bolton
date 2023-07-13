@@ -1,0 +1,221 @@
+---
+title: 'lab 1: Wikipedia searches example solution'
+author: "David Welch"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Task description and data for candidates applying to be a Data Analyst in the [Discovery department](https://www.mediawiki.org/wiki/Wikimedia_Discovery) at [Wikimedia Foundation](https://wikimediafoundation.org/wiki/Home).
+
+## Background
+
+Discovery (and other teams within the Foundation) rely on *event logging* (EL) to track a variety of performance and usage metrics to help us make decisions. Specifically, Discovery is interested in:
+
+- *clickthrough rate*: the proportion of search sessions where the user clicked on one of the results displayed
+- *zero results rate*: the proportion of searches that yielded 0 results
+
+and other metrics outside the scope of this task. EL uses JavaScript to asynchronously send messages (events) to our servers when the user has performed specific actions. In this task, you will analyze a subset of our event logs.
+
+
+## Data
+
+The dataset comes from a [tracking schema](https://meta.wikimedia.org/wiki/Schema:TestSearchSatisfaction2) that we use for assessing user satisfaction. Desktop users are randomly sampled to be anonymously tracked by this schema which uses a "I'm alive" pinging system that we can use to estimate how long our users stay on the pages they visit. The dataset contains just a little more than a week of EL data.
+
+| Column          | Value   | Description                                                                       |
+|:----------------|:--------|:----------------------------------------------------------------------------------|
+| uuid            | string  | Universally unique identifier (UUID) for backend event handling.                  |
+| timestamp       | integer | The date and time (UTC) of the event, formatted as YYYYMMDDhhmmss.                |
+| session_id      | string  | A unique ID identifying individual sessions.                                      |
+| group           | string  | A label ("a" or "b").                                     |
+| action          | string  | Identifies in which the event was created. See below.                             |
+| checkin         | integer | How many seconds the page has been open for.                                      |
+| page_id         | string  | A unique identifier for correlating page visits and check-ins.                    |
+| n_results       | integer | Number of hits returned to the user. Only shown for searchResultPage events.      |
+| result_position | integer | The position of the visited page's link on the search engine results page (SERP). |
+
+The following are possible values for an event's action field:
+
+- **searchResultPage**: when a new search is performed and the user is shown a SERP.
+- **visitPage**: when the user clicks a link in the results.
+- **checkin**: when the user has remained on the page for a pre-specified amount of time.
+
+### Example Session
+
+|uuid                             |      timestamp|session_id       |group |action           | checkin|page_id          | n_results| result_position|
+|:--------------------------------|:--------------|:----------------|:-----|:----------------|-------:|:----------------|---------:|---------------:|
+|4f699f344515554a9371fe4ecb5b9ebc | 20160305195246|001e61b5477f5efc |b     |searchResultPage |      NA|1b341d0ab80eb77e |         7|              NA|
+|759d1dc9966353c2a36846a61125f286 | 20160305195302|001e61b5477f5efc |b     |visitPage        |      NA|5a6a1f75124cbf03 |        NA|               1|
+|77efd5a00a5053c4a713fbe5a48dbac4 | 20160305195312|001e61b5477f5efc |b     |checkin          |      10|5a6a1f75124cbf03 |        NA|               1|
+|42420284ad895ec4bcb1f000b949dd5e | 20160305195322|001e61b5477f5efc |b     |checkin          |      20|5a6a1f75124cbf03 |        NA|               1|
+|8ffd82c27a355a56882b5860993bd308 | 20160305195332|001e61b5477f5efc |b     |checkin          |      30|5a6a1f75124cbf03 |        NA|               1|
+|2988d11968b25b29add3a851bec2fe02 | 20160305195342|001e61b5477f5efc |b     |checkin          |      40|5a6a1f75124cbf03 |        NA|               1|
+
+This user's search query returned 7 results, they clicked on the first result, and stayed on the page between 40 and 50 seconds. (The next check-in would have happened at 50s.)
+
+
+## Task
+
+*(This is a subset of the interview task)*
+
+
+
+1.  What is the overall clickthrough rate?
+
+```{r}
+library(tidyverse)
+wiki <-read_csv("../data/WIKI/events_log.csv")
+overall <- wiki %>% 
+  group_by(session_id) %>% 
+  summarise(pages=sum(action=="visitPage")) %>% 
+  summarise(mean(pages>0))
+```
+
+The clickthrough rate (% of sessions with a click-through) is `r round(overall,2)*100`% overall
+
+2. How does the click through rate vary between the groups?
+
+```{r, message=FALSE}
+bygroup <- wiki %>% 
+  group_by(session_id, group) %>% 
+  summarise(pages=sum(action=="visitPage")) %>% 
+  group_by(group) %>%
+  summarise(mean(pages>0))
+```
+
+The clickthrough rate (% of sessions with a click-through) is `r round(bygroup[1,2],2)*100`% in group a and `r round(bygroup[2,2],2)*100`% in group b.
+
+3. How does the click through rate vary by day? How about by group and by day together?
+
+```{r, message=FALSE}
+byday <- wiki %>% 
+  separate(timestamp, into=c("year", "month", "day","time"), sep=c(4,6,8)) %>%
+  group_by(session_id, month,day) %>% 
+  summarise(pages=sum(action=="visitPage")) %>% 
+  group_by(month,day) %>%
+  summarise(mean(pages>0))
+```
+
+The table below shows the click-through rate by day. 
+```{r}
+byday
+```
+There is no apparent effect of day.
+
+```{r, message=FALSE}
+bydayandgroup <- wiki %>% 
+  separate(timestamp, into=c("year", "month", "day","time"), sep=c(4,6,8)) %>%
+  group_by(session_id, month,day, group) %>% 
+  summarise(pages=sum(action=="visitPage")) %>% 
+  group_by(month,day,group) %>%
+  summarise(mean(pages>0))
+```
+
+This table below shows the click-through rate by day and group. Again, we see no obvious effect of day but a strong group effect. 
+```{r}
+bydayandgroup
+```
+
+
+
+4. Which results do people tend to try first? [If necessary, you can restrict to sessions with just one search]
+
+This would be relatively easy if people had just one search per session. Do they?
+
+```{r}
+wiki %>% 
+  group_by(session_id) %>%
+  filter(action=="searchResultPage") %>%
+  summarise(nsearches=n()) %>%
+  group_by(nsearches) %>%
+  summarise(n())
+```
+
+Ok, let’s start by looking at sessions with only one search result page
+
+```{r}
+nsearches <- wiki %>% 
+  group_by(session_id) %>% 
+  filter(action=="searchResultPage") %>%
+  summarise(ns= n(), nres=first(n_results))
+
+onesearch<- wiki %>% 
+  left_join(nsearches) %>%
+  filter(ns==1) 
+
+picks<- onesearch %>%
+  filter(action=="visitPage") %>%
+  group_by(session_id) %>%
+  mutate(firstpick = first(result_position)) %>%
+  ungroup() 
+
+picks %>%
+  group_by(firstpick) %>%
+  summarise(n())
+
+picks %>%
+  mutate(fromend=nres-firstpick) %>%
+  group_by(fromend) %>%
+  summarise(n())
+
+picks %>% 
+  mutate(proportion= round(firstpick/nres,1)) %>%
+  group_by(proportion) %>%
+  summarise(n())
+```
+
+We’re getting a few anomalies where the user has apparently selected a result after the end of the results page. These should be removed and noted.
+
+Now let’s see if we can handle multi-search sessions
+
+```{r}
+table <- wiki %>% arrange(session_id, timestamp) %>%
+  fill(n_results) %>%
+  filter(action=="visitPage") %>%
+  group_by(n_results,result_position) %>%
+  filter(n_results>0 & n_results>= result_position) %>%
+  summarise(n=n())
+
+table %>% filter(n_results<=20) %>%
+  qplot(n_results, result_position, size=n, data=.)
+
+table %>% filter(n_results>20) %>%
+  qplot(n_results, result_position, size=n, data=.)
+
+```
+
+And now by day
+
+```{r}
+daytable <- wiki %>% arrange(session_id, timestamp) %>%
+  separate(timestamp, into=c("year", "month", "day","time"), sep=c(4,6,8)) %>%
+  fill(n_results) %>%
+  filter(action=="visitPage") %>%
+  group_by(day, n_results,result_position) %>%
+  filter(n_results>0 & n_results>= result_position) %>%
+  summarise(n=n())
+
+daytable %>% ungroup() %>% 
+  group_by(day) %>%
+  summarise(mean(result_position==1), mean(result_position>20), mean(result_position>0.9*n_results))
+
+```
+
+Not a lot of variation by day in the proportion picking the first result, though going past the first page was less common on the 4th.
+
+
+## Some hints
+
+The **clickthrough rate** is the proportion of sessions that have a visitPage action. When a session has at least one visit page action, it is said to have clicked-through. It doesn't matter where in the session the visitPage action occurs. If there is no visit page action in a search session, there was no click-through. In the example session above, there is a visitPage action (the second row) so they clicked-through. So the **clickthrough rate** is a count of number of sessions with at least one visit page action divided by the count of the total number of sessions.  
+
+The function `ungroup()` removes the grouping on a pipeline, so you can analyse grouped summaries as a new variable
+
+`first(variable)` returns the first value of a variable, `last(variable)` returns the last value.  If a variable is constant, the first value is the value
+
+`fill(variable)` fills in missing values with the previous value for that observation
+
+`arrange(variable)` sorts the data on variable
+
+`View()` gives a spreadsheet view of a table, useful in pipeline construction.
