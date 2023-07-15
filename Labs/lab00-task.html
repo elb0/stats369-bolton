@@ -1575,23 +1575,24 @@ border-radius: 0px;
 </div>
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(here)</span></code></pre></div>
-<pre><code>## here() starts at /Users/lizabolton/Dropbox/Stats Dept/Lecturing/STATS369</code></pre>
+<p>Before we get started, make sure this file an d
+<code>STATS369_lab-template.Rmd</code> are downloaded in the same place
+in your computer.</p>
 <div id="what-is-this-document" class="section level1">
 <h1>What is this document?</h1>
 <p>This lab takes you through some basics of RMarkdown that you have
 probably seen in other courses. It also covers a couple important
 considerations for our labs and assignments in this course, as well as
-discussing how/when you can use ChatGPT. Finally, its main purpose is to
-give you a useful template for your own labs and assessments.</p>
+discussing how/when you can use ChatGPT. It also gives you a useful
+template for your own labs and assignments</p>
 </div>
 <div id="some-information-from-liza" class="section level1">
 <h1>Some information from Liza</h1>
 <div id="the-look-of-your-template" class="section level2">
 <h2>The ‘look’ of your template</h2>
-<p>This is a Rmd document. You can change the look of the document by
-editting the YAML area above. The YAML (yet another markdown
-laonguage).</p>
+<p>This is a Rmd document that you can knit to create an HTML file. You
+can change the look of the HTML document by editing the YAML area above.
+YAML = yet another markdown language.</p>
 <p>You can try other themes if you would like, <a href="https://www.datadreaming.org/post/r-markdown-theme-gallery/">this
 post</a> gives some nice images to show you what they look like. This is
 optional</p>
@@ -1631,20 +1632,23 @@ totally cut you off from them. THAT SAID, I find using AI the most
 helpful in my own work when I already know the enough to evaluate the
 output with a reasonable level of expertise. Labs are low stakes
 assessments based on effort. I would strongly recommend that you use
-these as challenges to write your own code. In the test and exam, you
-will NOT have the AI and will need to be able to read and evaluate code.
-Practise with writing code will make this much easier for you.</p>
+these as challenges to write your own code, and limit any AI use to
+helping you if you get stuck/commenting code/getting eedback on your
+writing. In the test and exam, you will NOT have access to any AI and
+will need to be able to read, explain and evaluate code. Practise with
+writing code will make this much easier for you.</p>
 <div style="color: red;">
 <p>If you do not have access to an AI based on ethical and/or financial
 considerations, you DO NOT NEED TO USE ONE to achieve highly in this
 course.</p>
 </div>
 <hr>
-<p><strong>I asked ChatGPT to write part of this lab for
-you.</strong></p>
+<p><strong>I asked ChatGPT to write part of this lab for you. I have
+referenced it in the references section of the template.</strong></p>
 </div>
 <div id="my-prompt" class="section level3">
 <h3>My prompt:</h3>
+<blockquote>
 <p>Write code for an Rmd document for a introduction lab to a course
 that uses R Markdown. The document should briefly explain what an Rmd
 is, covering code and text areas. It should also demo how to load
@@ -1653,6 +1657,7 @@ image (use this image: <a href="https://cdn.myportfolio.com/45214904-6a61-4e23-9
 and credit Alison Horst, <a href="https://allisonhorst.com/data-science-art" class="uri">https://allisonhorst.com/data-science-art</a>), explain
 headings and explain comments on code (noting that both use hashtags and
 explaining the difference)</p>
+</blockquote>
 </div>
 <div id="with-a-few-edits-this-is-what-chatgpt-suggested" class="section level3">
 <h3>With a few edits, this is what ChatGPT suggested…</h3>
@@ -1681,8 +1686,8 @@ or code.</p>
 <p>Chunks of R code in the document are run and the output (including
 graphics) is inserted into the final document.</p>
 <p>Here is an example of a code chunk:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># This is a comment within a code chunk</span></span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Hello, world!&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># This is a comment within a code chunk</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">print</span>(<span class="st">&quot;Hello, world!&quot;</span>)</span></code></pre></div>
 <pre><code>## [1] &quot;Hello, world!&quot;</code></pre>
 <p>The <code>{r}</code> after the three backticks <code>```</code>
 indicates that the chunk is written in R language.</p>
@@ -1705,22 +1710,22 @@ function. Let’s load the <code>tidyverse</code> package, which is a
 collection of R packages designed for data science. If you don’t have it
 installed, you can install it using
 <code>install.packages(&quot;tidyverse&quot;)</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Load the tidyverse library</span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Load the tidyverse library</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 </div>
 <div id="loading-data" class="section level2">
 <h2>Loading Data</h2>
 <p>Data can be loaded in R using various functions depending on the data
 type. Here we will load a CSV file.</p>
 <p>Replace ‘YOUR_DATA.csv’ with your actual data file.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Load data</span></span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;YOUR_DATA.csv&#39;</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="co"># Note: I&#39;ve made some changes from ChatGPT&#39;s suggestion</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="do">## 1. I converted read.csv to read_csv.</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="do">##   Usually they do basically the same thing, but I like the </span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="do">##   way the tidyverse version handles things</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="do">## 2. I added eval=FALSE to the chunk options so it wouldn&#39;t be run</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="co"># Load data</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">&#39;YOUR_DATA.csv&#39;</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="co"># Note: I&#39;ve made some changes from ChatGPT&#39;s suggestion</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="do">## 1. I converted read.csv to read_csv.</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="do">##   Usually they do basically the same thing, but I like the </span></span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="do">##   way the tidyverse version handles things</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="do">## 2. I added eval=FALSE to the chunk options so it wouldn&#39;t be run</span></span></code></pre></div>
 </div>
 <div id="loading-images" class="section level2">
 <h2>Loading Images</h2>
@@ -1760,25 +1765,33 @@ where I would set any general chunk options, as well as where I would
 load my libraries. If I realise I need additional libraries later, I
 would come back here and add them.</em></p>
 <p><em>Notes from me are in italics.</em></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Set code to show</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co"># Load libraries</span></span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># Set code to show</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="co"># This checks if you have tidyverse and installs it if you don&#39;t</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)) {</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>     <span class="fu">install.packages</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="at">dependencies =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>     <span class="fu">library</span>(<span class="st">&quot;tidyverse&quot;</span>, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>}</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co"># Load libraries</span></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code></pre></div>
 <div id="task-1" class="section level2">
 <h2>Task 1</h2>
 <p><em>Use headings to organise your submission and make it easy for
 your marker to find your answers</em></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="co"># Is the hashtag/octothrope is inside a code chunk, then it is a comment</span></span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co"># You will be expected to comment your code sufficiently clearly</span></span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># so that others with reasonable R knowledge could follow your work</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># Is the hashtag/octothrope is inside a code chunk, then it is a comment</span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># You will be expected to comment your code sufficiently clearly</span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="co"># so that others with reasonable R knowledge could follow your work</span></span></code></pre></div>
 </div>
 <div id="task-2" class="section level2">
 <h2>Task 2</h2>
 <p>An example of some commentary about my work…</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Some commented code</span></span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="dv">2</span><span class="sc">+</span><span class="dv">2</span></span></code></pre></div>
-<pre><code>## [1] 4</code></pre>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="co"># Some commented code</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>x <span class="ot">=</span> <span class="dv">2</span><span class="sc">+</span><span class="dv">2</span></span></code></pre></div>
+<p>The result of my calculation is 4. That is some inline R code being
+run!</p>
+<p>I can also multiply by 10 to get 40.</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>

@@ -1,7 +1,7 @@
 ---
-title: 'Lab 0: Lab template'
+title: 'Lab template'
 subtitle: "STATS 369"
-author: "This task does NOT need to be submitted"
+author: "Your name"
 output:
   html_document:
     highlight: pygments
