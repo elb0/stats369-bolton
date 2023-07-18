@@ -1,0 +1,51 @@
+---
+title: 'Lab template'
+subtitle: "STATS 369"
+author: "Your name"
+output:
+  html_document:
+    highlight: pygments
+    theme: readable
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+# Instructions
+
+* Students come to this course with different coding backgrounds. To help keep this course fair, you will be asked to rely on the code we use in class and labs to answer code questions in the main questions in these assignments. (Bonus questions,  are fair game for showing-off and Googling). 
+
+
+# Task 1: Revision
+
+From the [Course Outline](https://courseoutline.auckland.ac.nz/dco/course/STATS/369/1235) the pre-requisites for this class are: STATS 220 and STATS 210 or 225 and 15 points from ECON 221, STATS 201, 208, or ENGSCI 314.
+
+Choose one of these courses (presumably one you've taken) and write one multichoice question on a topic from that course. The audience should be your peers in this course who are aiming to revise topics from the prerequisites. *If I have time, I will make some of these into a practice quiz on Canvas. You can just write a note if you don't want your question considered for inclusion, it won't affect your mark.*
+
+a. Make it clear for which **course** this is revision.
+b. Your question should have **4 options** (1 correct and 3 distractors)
+c. Write an **answer key** that explains which answer is correct and why the others are wrong.
+
+You will be marked on the correctness and quality of your question and explanation. The question does not have to be *hard* but should be useful to you and your fellow students. 
+
+# Task 2: Algorithmic fairness audit
+
+
+1. Write 'alt text' for the chart you create above.
+
++2 Bonus points option: Create the UGLIEST version of this graph that you can. Dancing T-rex as the background, colours that make your eyes bleed? Go for it! Note: You are free to use any functions you can find, you don't have to stick as closely to course content.
+
+
+# Task 3: Reflection
+
+1. Read over the [current graduate capability themes, LEVEL 2: Graduate Capabilities – Themes](https://www.auckland.ac.nz/en/students/forms-policies-and-guidelines/student-policies-and-guidelines/graduate-profile.html) or the refreshed version that connects to [Taumata Teitei](https://www.auckland.ac.nz/en/on-campus/life-on-campus/latest-student-news/curriculum-framework-transformation-programme0/university-graduate&~_)
+ html). Choose a specific part of task in this assessment &~_)
+ it demonstrates this capability. Assume your audience is from the HR team at potential employer for the Data Science job of your dreams.
+ 
+ 2. What is something you're proud of in the assignment?
+ 
+ 3. What is something you're going to do differently for the next assignment?
+
+## References
+
+*Remember to include references if you use AI, and you should referent the Graduate Capabilities document use use in the reflection*.

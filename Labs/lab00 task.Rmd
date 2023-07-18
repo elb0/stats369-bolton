@@ -11,7 +11,7 @@ output:
     toc_float: true
 ---
 
-Before we get started, make sure this file an d `STATS369_lab-template.Rmd` are downloaded in the same place in your computer.
+Before we get started, make sure this file and `STATS369_lab-template.Rmd` are downloaded in the same place in your computer.
 
 # What is this document?
 
