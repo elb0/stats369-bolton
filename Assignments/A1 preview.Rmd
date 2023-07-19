@@ -1,0 +1,32 @@
+---
+title: "Assignment 1 preview"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Task 1: Revision
+
+From the [Course Outline](https://courseoutline.auckland.ac.nz/dco/course/STATS/369/1235) the pre-requisites for this class are: STATS 220 and STATS 210 or 225 and 15 points from ECON 221, STATS 201, 208, or ENGSCI 314.
+
+Choose one of these courses (presumably one you've taken) and write one multichoice question on a topic from that course. The audience should be your peers in this course who are aiming to revise topics from the prerequisites. *If I have time, I will make some of these into a practice quiz on Canvas. You can just write a note if you don't want your question considered for inclusion, it won't affect your mark.*
+
+* Make it clear for which **course** this is revision.
+* Your question should have **4 options** (1 correct and 3 distractors)
+* Write an **answer key** that explains which answer is correct and why the others are wrong.
+
+You will be marked on the correctness and quality of your question and explanation. The question does not have to be *hard*, per se, but should be **USEFUL** to you and your fellow students. 
+
+## Go to [link.lizabolton.com/slinky](http://link.lizabolton.com/slinky) or use the QR code and suggest a topic you might be interested in having practice questions for. What concepts or skills do you find tricky? 
+
+## Are there any changes to this task you'd like to suggest before the assignment goes live?
+
+```{r, echo=F}
+library(qrcode)
+
+qr <- qr_code("https://statsapps.online/slinky/G291726211GT2H/student/")
+
+plot(qr)
+
+```
+

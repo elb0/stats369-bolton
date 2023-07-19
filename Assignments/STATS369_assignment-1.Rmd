@@ -22,11 +22,13 @@ From the [Course Outline](https://courseoutline.auckland.ac.nz/dco/course/STATS/
 
 Choose one of these courses (presumably one you've taken) and write one multichoice question on a topic from that course. The audience should be your peers in this course who are aiming to revise topics from the prerequisites. *If I have time, I will make some of these into a practice quiz on Canvas. You can just write a note if you don't want your question considered for inclusion, it won't affect your mark.*
 
-a. Make it clear for which **course** this is revision.
-b. Your question should have **4 options** (1 correct and 3 distractors)
-c. Write an **answer key** that explains which answer is correct and why the others are wrong.
+* Make it clear for which **course** this is revision.
+* Your question should have **4 options** (1 correct and 3 distractors)
+* Write an **answer key** that explains which answer is correct and why the others are wrong.
 
-You will be marked on the correctness and quality of your question and explanation. The question does not have to be *hard* but should be useful to you and your fellow students. 
+You will be marked on the correctness and quality of your question and explanation. The question does not have to be *hard*, per se, but should be **USEFUL** to you and your fellow students. 
+
+<hr>
 
 # Task 2: Algorithmic fairness audit
 

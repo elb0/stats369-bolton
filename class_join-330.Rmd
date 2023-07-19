@@ -1,0 +1,26 @@
+---
+title: "Class join"
+author: "Liza Bolton"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(readxl)
+STATS_330 <- read_excel("~/Downloads/Student List - STATS 330 (1233) - 19_07_2023 (1).xlsx") |> 
+  select(2:4) |> 
+  mutate(class = "330")
+STATS_369 <- read_excel("~/Downloads/Student List - STATS 369 (1235) - 19_07_2023 (1).xlsx") |> 
+  select(2:4) |> 
+  mutate(class = "369")
+
+joined <- STATS_330 |> 
+  full_join(STATS_369) |> 
+  group_by(`UoA Username`) |> 
+  mutate(count = n()) |> 
+  filter(class == "369")
+
+
+```
+
