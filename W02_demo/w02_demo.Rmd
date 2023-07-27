@@ -1,0 +1,176 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(tidyverse)
+```
+
+# Air quality examples
+
+```{r}
+data(airquality)
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone))
+```
+
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) +
+  geom_point() #<<
+```
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone, 
+             color = factor(Month))) +  #<<
+  geom_point()
+```
+
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_point() + 
+  geom_smooth()
+```
+
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_hex() 
+```
+
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = factor(Month), 
+             y = Ozone)) +
+  geom_boxplot() 
+```
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_point() + 
+  facet_wrap(~Month, nrow = 2) 
+```
+
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) +
+  geom_point()
+```
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_point() + 
+  facet_wrap(~Month, nrow = 2) 
+```
+
+
+```{r}
+airquality %>% 
+  na.omit() %>% 
+  mutate(TempGp = cut(Temp, 
+           breaks = quantile(Temp, (0:4)/4), 
+           nc = TRUE)) %>%
+  mutate(WindGp = cut(Wind, 
+           breaks = quantile(Wind, (0:4)/4), 
+           inc = TRUE)) %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_point() + 
+  facet_grid(WindGp ~ TempGp)
+```
+
+# Vehicles
+
+```{r}
+## ---- W02L02-d2 ----
+cars.df <- read_csv("data/VehicleYear-2019.csv")
+# dim(cars.df)
+# glimpse(cars.df)
+dim(cars.df)  # dimension of the data frame
+head(names(cars.df), 20)  # some column names of the cars.df
+
+## ---- W02L02-d2B ----
+dim(cars.df)
+head(names(cars.df), 20)
+
+## ---- W02L02-p11 ----
+cars.df %>%
+  ggplot(aes(x = GROSS_VEHICLE_MASS)) +
+  geom_histogram()
+
+## ---- W02L02-p12 ----
+cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0, #<<
+         POWER_RATING > 0) %>% #<<
+  ggplot(aes(x = POWER_RATING,
+             y = GROSS_VEHICLE_MASS)) +
+  geom_point()
+
+## ---- W02L02-p13 ----
+cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0,
+         POWER_RATING > 0) %>%
+  ggplot(aes(x = POWER_RATING,
+             y = GROSS_VEHICLE_MASS)) +
+  {{geom_point(alpha = 0.05)}}
+
+## ---- W02L02-p14 ----
+cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0,
+         POWER_RATING > 0) %>%
+  ggplot(aes(x = POWER_RATING,
+             y = GROSS_VEHICLE_MASS)) +
+  {{geom_hex()}}
+
+## ---- W02L02-p15 ----
+cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0,
+         POWER_RATING > 0,
+         MAKE == 'TOYOTA') %>%
+  ggplot(aes(x = FIRST_NZ_REGISTRATION_YEAR, #<<
+             y = GROSS_VEHICLE_MASS)) +  #<<
+  geom_point()
+
+## ---- W02L02-p16 ----
+cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0,
+         POWER_RATING > 0,
+         MAKE == 'TOYOTA') %>%
+  ggplot(aes(x = FIRST_NZ_REGISTRATION_YEAR,
+             y = GROSS_VEHICLE_MASS)) +
+  {{geom_jitter()}}
+
+## ---- W02L02-p17 ----
+p <- cars.df %>%
+  filter(GROSS_VEHICLE_MASS > 0,
+         POWER_RATING > 0) %>%
+  ggplot(aes(x = POWER_RATING,
+             y = GROSS_VEHICLE_MASS)) +
+  geom_point(alpha = 0.05) +
+  labs(title = "Engine power vs. Car weight", #<<
+       x = "Power rating (kw)",  #<<
+       y = 'Vehicle mass (kg)',  #<<
+       caption = 'Data from nzta.govt.nz') #<<
+p
+
+## ---- W02L02-p18 ----
+p +
+  scale_y_continuous(  #<<
+    limits = c(0,3500),
+    breaks = seq(0,3500,by=500)) +
+  coord_cartesian(xlim = c(0, 500)) +
+  theme_minimal()  #<<
+
+```
+

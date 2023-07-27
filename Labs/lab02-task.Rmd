@@ -1,0 +1,303 @@
+---
+title: 'Lab 2: Christmas in July'
+subtitle: "STATS 369"
+author: "Lab developed by Liza Bolton"
+output:
+  unilur::tutorial_html: 
+    highlight: pygments
+    theme: readable
+    toc: true
+    toc_depth: 2
+    toc_float: true
+  unilur::tutorial_html_solution: 
+    highlight: pygments
+    theme: readable
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Important
+
+You are not required to set up a TMDB account if you object. You can use my pre-created data.
+
+There is lots of example code for you to run. You don't need to change it and its okay if parts of it are unfamiliar. Look out for **TASK** headings for where you will need to write short answers and/or code. The code you write should make use of Tidyverse functions as much as possible.
+
+# Getting set up
+
+```{r libraries, message = FALSE, warning = FALSE}
+# Credit to danielle smith for this basis of this great little function: 
+# https://gist.github.com/smithdanielle/9913897
+install_check <- function(pkg){
+    new.pkg <- pkg[!(pkg %in% installed.packages()[, "Package"])]
+    if (length(new.pkg)) 
+        install.packages(new.pkg, dependencies = TRUE)
+}
+
+# Here is a list of the packages we will need today
+packages = c("tidyverse", "polite",
+             "TMDb", "keyring", "glue", "lubridate", "ggpubr")
+
+install_check(packages)
+
+# Load tidyverse now, we'll load the others as we need them
+library(tidyverse) # Liza's fave package of packages ever
+library(glue) # awesome package that we don't have time to talk about
+library(lubridate) # helps make dates much easier
+
+library(TMDb) # provides access to the API
+library(keyring) # for storing our API key
+
+library(polite) # let's us check the robotstxt, and also pass user agent information to the site, if we choose
+```
+
+# IMDB
+
+For our Christmas in July theme, we are going to look at popular Christmas movies. Here is [a list from IMDB of movies tagged with Christmas, sorted by popularity](https://www.imdb.com/search/keyword/?keywords=christmas&ref_=kw_nxt&sort=moviemeter,asc&mode=detail&page=2&title_type=movie).
+
+To do ethical scraping, we'll start by 'bowing' to this site. Run `?bow` in your console to see the brief description of what this function does. It will check our URL against the information in the robots.txt to see if it is on one of the disallowed paths.
+
+```{r}
+bow_imdb <- bow("https://www.imdb.com/search/keyword/?keywords=christmas&ref_=kw_nxt&sort=moviemeter,asc&mode=detail&page=2&title_type=movie")
+bow_imdb
+```
+
+# TASK 1
+
+What is the default delay between scrapes for the `polite` package?
+
+## Ts & Cs
+Let's looks at the robots.txt and Terms and Conditions ourselves. 
+
+```{r checksites, eval=FALSE}
+browseURL("https://www.imdb.com/conditions")
+browseURL("https://www.imdb.com/robots.txt")
+```
+
+So, can we ethically scrape IMDB?
+
+# TASK 2
+
+Write ONE to THREE sentences to explain if we can ethically scrape this site, why or why not. 
+
+# The Movie Database (TMDb)
+
+Let's take a look at a different online movie database...
+
+```{r}
+browseURL("https://www.themoviedb.org/terms-of-use")
+```
+
+## Set up an account (optional for lab but - required for API access)
+
+* Go to the TMDB website: https://www.themoviedb.org/.
+* Click on the "Sign Up" button located at the top right corner of the homepage.
+* You will be presented with three sign-up options: "Join TMDB with Google," "Join TMDB with Facebook," or "Join TMDB with Email." Choose the option that suits you best. If you prefer using an email address, click on "Join TMDB with Email."
+* Fill in the required information to create your account. This typically includes your full name, email address, a secure password, and agreeing to their terms of service and privacy policy.
+* Once you've completed the form, click on the "Sign Up" or "Create Account" button.
+* TMDB may send a confirmation email to the email address you provided. Check your inbox and click on the verification link to confirm your account.
+
+## Getting an API Key from TMDB
+
+* After successfully signing in, go to your account settings by clicking on your profile picture or username (usually located at the top right corner).
+* In the account settings menu, select "API" from the options. You will be taken to the API page.
+* On the API page, click on the "Request an API Key" button.
+* You will be presented with a form to fill out. Provide the necessary information, such as the purpose of using the API, the name of your application or project, and any other relevant details.
+* Once you have filled out the form, click on the "Submit" or "Request API Key" button.
+* TMDB will review your request, and if everything is in order, they will provide you with an API key associated with your account. (This is usually pretty much automatic.)
+* Once your request is approved, you can find your API key on the same API page where you requested it. It will be displayed there, and you can copy it to use it in your applications.
+
+## API
+
+We can't scrape ethically, but we can use the API. In fact, there exists a package to helps us do this easily in R! 
+
+### Libraries we need
+You need the `TMDb` package that helps us access the API through R. We're also going to install `keyring` which is a nice way to keep your private API key safe but still share all the code we're using.
+
+### Set up API key, super secretly
+
+```{r, eval=FALSE}
+#This will create a pop-up prompting you for a password. Put your api key in there.
+key_set("TMDB_API")
+```
+
+# The data
+## Let's explore some functions!
+
+You can find more information in the [documentation on CRAN](https://cran.r-project.org/web/packages/TMDb/TMDb.pdf) or on this more [interactive site](https://rdrr.io/cran/TMDb/)
+
+Let's find out what kind of genre classifications we have.
+
+# TASK 3
+
+1. Read in the `genres.csv` dataset. 
+
+```
+# This is the real way to get this data in tidy format
+genres <- genres_movie_list(key_get("TMDB_API"))$genres
+```
+
+We can use these ids later to help us search things.
+
+##  A little error fixing for keywords
+
+There is an error in the package for this function that is supposed to search keywords, so I've edited it here. 
+
+```{r search_keyword}
+search_keyword <- function(api_key, query, page=1){
+    
+    if(page<1 || page>1000){
+        stop("page must be a number between 1 and 1000")
+    }
+    
+    l <- list(page=page)
+    l <- l[!is.na(l)]
+    
+    params <- paste("&", names(l), "=",l, sep="", collapse="")
+    url <- fromJSON(GET(URLencode(url<-paste("http://api.themoviedb.org/3/search/keyword?api_key=", 
+                                             api_key, "&query=", query, params, sep="")))$url)
+    
+    return(url)
+    
+}
+```
+
+**portfolio opportunity: Figure out what was wrong, write and reprex, or even put in a pull request on the GitHub for this package with a fix this function! That said, this package doesn't appear to have been maintained much recently...**
+https://github.com/AndreaCapozio/TMDb 
+ 
+```{r}
+# now I want to find all the Christmas keywords I could be searching
+search_keyword(key_get("TMDB_API"), query = "christmas")
+```
+
+Notice that this only has 20 rows... are there more Christmas keywords than just that? 20 seems like a suspicious tidy number...
+
+Our problem is that this function can just pull one 'page' at a time, a page has 20 entries. Reading the documentation shows us that there are a maximum of 1000 pages but I think it is actually 500 based on some testing.
+
+Thankfully, we can find out how many pages there are by just looking at the `total_pages` list element. Convenient!
+
+Now, we *could* do a `for` loop to get all the pages....but it seems like the more people program the less they like `for` loops. We can use the `map_` functions from `purrr` to do what we want and keep our code very tidy. More info here: https://speakerdeck.com/jennybc/purrr-workshop. (We'll be revisiting these very useful `map_` functions later in this course.)
+            
+```{r, getxmasids}
+# a function that runs this for command for any given page
+one_page <- function(x) search_keyword(key_get("TMDB_API"), query = "christmas", page = x)
+
+# a vector of the pages, from 1 to the max page for this search
+pages <- 1:one_page(1)$total_pages
+
+# now use map_dfr (map specifcally for returning data frames) instead of a for loop
+christmas_keywords <- map_dfr(pages, function(x) one_page(x)$results)
+christmas_keywords
+
+# later, for searching multiple IDs I need to make them a string seperated by | for "OR" or , for "AND"
+xmas_ids <- glue_collapse(christmas_keywords$id, sep="|")
+xmas_ids
+```
+
+
+# TASK 3: Find a keyword or set of key words you'd be interested in searching.
+
+If not using the API, just note that and move on to the graphing task (TASK 5).
+
+```{r, getyourkeywords, eval=FALSE}
+# a function that runs this command for any given page
+# REPLACE <PUT SEARCH TERM HERE>
+one_page <- function(x) search_keyword(key_get("TMDB_API"), query = "<PUT SEARCH TERM HERE", page = x)
+
+# a vector of the pages, from 1 to the max page for this search
+pages <- 1:one_page(1)$total_pages
+
+# use map_dfr (map specifically for returning data frames) instead of a for loop
+my_keywords <- map_dfr(pages, function(x) one_page(x)$results)
+my_keywords
+
+# later, for searching multiple IDs I need to make them a string separated by | for "OR" or , for "AND"
+keywords_ids <- glue_collapse(my_keywords$id, sep="|")
+keywords_ids
+
+# change eval=FALSE in the chunk options, so that is TRUE
+
+```
+
+## Searching for movies
+
+`discover_movie()` lets us do some searching based on a range of criteria. I want movies that are Romance genre, and have "christmas" related keywords.
+
+```{r xmas_romance, cache = T}
+# Reusing the code structure above. This could probably be streamlined even better with a more general function
+one_page <- function(x) discover_movie(key_get("TMDB_API"), 
+                                       with_genres = 10749, 
+                                       with_keywords = xmas_ids, 
+                                       page = x)
+pages <- 1:one_page(1)$total_pages
+christmas_romance <- map_dfr(pages, function(x) one_page(x)$results) %>% 
+  mutate(genre_ids = as.character(genre_ids))
+  
+write_csv(christmas_romance, "data/christmas_romance.csv")
+
+# HOT TIP! Note the cache = T setting in this chunk option. This creates a cache for the data in this chunk, meaning it is only re-run if there is change. This makes it faster to knit your RMd.
+```
+
+# TASK 4: Set up a search of your own (if not using the API, just note that)
+
+```{r}
+
+```
+
+
+# TASK 5: Ugly graph challenge
+
+Use this API (or the data I have provided) and make an extremely ugly and hard to read graph! The sky is the limit (warning: stop if you make your own eyes bleed.)
+
+* Great resources for colours in R: http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf 
+
+
+```{r, echo = F}
+christmas_romance <- read_csv("data/christmas_romance.csv") %>% 
+  mutate(release_date = as_date(release_date)) 
+christmas_romance %>% 
+  ggplot(aes(x = release_date)) +
+  geom_histogram()
+
+edit <- christmas_romance %>% 
+  mutate(month = month(release_date, label = TRUE),
+         year = year(release_date),
+         ym = paste(year, month),
+         quarter = quarter(release_date, with_year = TRUE)) %>% 
+  mutate(month = fct_expand(month, month.abb))
+
+myplot <- edit %>% 
+  filter(release_date > "2010-01-01") %>%
+  ggplot(aes(x = month)) +
+  geom_bar() + 
+  scale_x_discrete(drop=FALSE) + # this bit of magic makes sure we don't drop the missing months 
+  labs(title = "Release month of Christmas movies since 2010",
+        x = "Month",
+        y = "Number of movies released",
+        caption = "Source: https://www.themoviedb.org/") +
+  theme_minimal() 
+
+myplot
+
+# read in saved image for background
+sweater_bkgd <- jpeg::readJPEG("sweater_bkgd.jpg")
+
+edit %>% 
+  filter(release_date > "2010-01-01") %>%
+  ggplot(aes(x = month)) +
+  ggpubr::background_image(sweater_bkgd) +
+  geom_bar(fill = "darkgreen") + 
+  scale_x_discrete(drop=FALSE) + # this bit of magic makes sure we don't drop the missing months 
+labs(title = "Release month of Christmas movies since 2010",
+        x = "Month",
+        y = "Number of movies released",
+        caption = "By: @Liza_Bolton; Source: https://www.themoviedb.org/") +
+  theme(plot.background = element_rect(fill = "darkgreen"), text = element_text(color = "white"), axis.text= element_text(color = "white"))
+
+ggsave("my_first_ugly_plot.png", width = 7, height = 4.5)
+```
+

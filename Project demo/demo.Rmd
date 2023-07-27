@@ -1,0 +1,22 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+# TASK
+
+- a code chunk
+- that calculates a mean of something
+- saves it as my_mean
+- print my_mean in the text part (i.e., inline)
+- any other considerations for reproducibility
+
+```{r}
+set.seed(7)
+x <- rnorm(10)
+my_mean = mean(x)
+```
+
+my mean is 'r my_mean'

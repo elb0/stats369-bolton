@@ -1,0 +1,23 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(rvest)
+my_url <- "https://link.lizabolton.com/a_scrapable_poem.html"
+```
+
+
+<br>
+<br>
+<br>
+<br>
+
+```{r}
+html_text(read_html(my_url))
+html_text2(read_html(my_url))
+```
+

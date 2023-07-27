@@ -1,0 +1,52 @@
+---
+title: 'Lab template'
+subtitle: "STATS 369"
+author: "Your name"
+output:
+  html_document:
+    highlight: pygments
+    theme: readable
+    toc: true
+    toc_depth: 2
+    toc_float: true
+---
+
+```{r, message=F, warning = F}
+library(tidyverse)
+```
+
+
+```{r}
+airquality %>% 
+  na.omit() %>%
+  ggplot(aes(x = Solar.R, y = Ozone, 
+             color = Month)) +
+  geom_point()
+```
+```{r}
+airquality %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_hex()
+```
+
+```{r}
+airquality %>% 
+  ggplot(aes(x = factor(Month), 
+             y = Ozone)) +
+  geom_boxplot() +
+  geom_jitter()
+```
+
+```{r}
+airquality %>% na.omit() %>% 
+  mutate(TempGp = cut(Temp, 
+           breaks = quantile(Temp, (0:4)/4), 
+           nc = TRUE)) %>%  # use %>%
+  mutate(WindGp = cut(Wind, 
+           breaks = quantile(Wind, (0:4)/4), 
+           inc = TRUE)) %>% 
+  ggplot(aes(x = Solar.R, y = Ozone)) + 
+  geom_point() |>  # use +
+  facet_grid(TempGp ~ WindGp)
+```
+
